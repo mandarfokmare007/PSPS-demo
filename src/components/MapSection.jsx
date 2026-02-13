@@ -25,27 +25,8 @@ export default function MapSection({
   };
 
   const getStyleUrl = (styleId) => {
-    // Use a simple style with OpenStreetMap tiles
-    const style = {
-      version: 8,
-      name: "Basic Map",
-      sources: {
-        osm: {
-          type: "raster",
-          url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-          tileSize: 256,
-        },
-      },
-      layers: [
-        {
-          id: "osm",
-          type: "raster",
-          source: "osm",
-        },
-      ],
-    };
-    console.log("📍 Using OSM style");
-    return style;
+    // Use style.json from maplibre demo server
+    return "https://demotiles.maplibre.org/style.json";
   };
 
   // ----------------------------
