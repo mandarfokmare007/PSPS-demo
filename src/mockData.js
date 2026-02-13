@@ -321,6 +321,14 @@ export const mockHNIHNUPoints = [
   { id: 'HNI-002', name: 'HNI-Hazard', lat: 35.8690, lng: -119.6185, type: 'HNI' },
 ];
 
+export const mockVMTagPoints = [
+  { id: 'VM-001', name: 'VM-HNI-Emergency', lat: 37.3382, lng: -119.8863, severity: 'critical' },
+  { id: 'VM-002', name: 'VM-Priority-1', lat: 35.3733, lng: -119.0187, severity: 'high' },
+  { id: 'VM-003', name: 'VM-HNI-Emergency', lat: 35.8691, lng: -119.6188, severity: 'critical' },
+  { id: 'VM-004', name: 'VM-Safety', lat: 36.1699, lng: -119.4944, severity: 'medium' },
+  { id: 'VM-005', name: 'VM-Inspection', lat: 37.2952, lng: -118.2551, severity: 'low' },
+];
+
 export const mockAppState = {
   currentMETModel: '00z-2024-02-11',
   currentMETTimestamp: new Date('2024-02-11T19:30:00Z'),

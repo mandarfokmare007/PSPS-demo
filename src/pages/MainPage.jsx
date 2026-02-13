@@ -3,7 +3,7 @@ import ControlPanel from '../components/ControlPanel';
 import Footer from '../components/Footer';
 import MapSection from '../components/MapSection';
 import TopBar from '../components/TopBar';
-import { mockAppState, mockMETModels, mockTransmissionLines } from '../mockData';
+import { mockAppState, mockMETModels, mockTransmissionLines, mockTPPolygons, mockATagPoints, mockVMTagPoints } from '../mockData';
 import { useKeyboardShortcuts } from '../utils/keyboardShortcuts';
 
 export default function MainPage() {
@@ -262,7 +262,12 @@ export default function MainPage() {
           appState={appState}
           onSelectLine={handleSelectLine}
           onLayerToggle={handleLayerToggle}
+          tpPolygons={mockTPPolygons}
+          aTagPoints={mockATagPoints}
+          vmTagPoints={mockVMTagPoints}
         />
+
+        
 
         {/* Right: Controls + Tables (40%) */}
         <ControlPanel
