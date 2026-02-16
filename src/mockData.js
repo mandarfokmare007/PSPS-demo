@@ -484,8 +484,8 @@ export const mockAppState = {
   selectedLineId: 'TL-001',
   selectedStructureId: 'S-001-A',
   filters: {
-    region: null,
-    psps_mfpc: 'All', // 'All', 'Minimum', 'Near'
+    region: [],
+    psps_mfpc: [], // 'All', 'Minimum', 'Near'
     guidance_type: [], // ['CFPt-Asset', 'CFPt-Veg', 'CFB']
     open_a_tags: false,
     open_hni_hnu: false,

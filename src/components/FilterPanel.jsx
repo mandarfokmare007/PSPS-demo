@@ -42,7 +42,24 @@ export default function FilterPopover({ filters, onFiltersChange }) {
       return { ...prev, guidance_type: next };
     });
   };
-
+  const handleMfpcToggle = (type) => {
+    setLocalFilters((prev) => {
+      const current = prev.psps_mfpc || [];
+      const next = current.includes(type)
+        ? current.filter((t) => t !== type)
+        : [...current, type];
+      return { ...prev, psps_mfpc: next };
+    });
+  };
+    const handleRegionToggle = (type) => {
+    setLocalFilters((prev) => {
+      const current = prev.region || [];
+      const next = current.includes(type)
+        ? current.filter((t) => t !== type)
+        : [...current, type];
+      return { ...prev, region: next };
+    });
+  };
   // Shared classes
   const labelClass = "block text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider";
   const sectionClass = "p-4 border-b border-slate-100 last:border-0";
@@ -84,13 +101,13 @@ export default function FilterPopover({ filters, onFiltersChange }) {
             </div>
 
             {/* mFPC Level - Compact Segmented */}
-            <div className={sectionClass}>
+            {/* <div className={sectionClass}>
               <label className={labelClass}>mFPC Level</label>
               <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
                 {['All', 'Minimum', 'Near'].map((option) => (
                   <button
                     key={option}
-                    onClick={() => setLocalFilters({ ...localFilters, psps_mfpc: option })}
+                    onClick={() => handleMfpcToggle({ ...localFilters, psps_mfpc: option })}
                     className={`flex-1 py-1.5 text-[10px] font-bold rounded-lg transition-all ${
                       localFilters.psps_mfpc === option
                         ? 'bg-white text-indigo-600 shadow-sm border border-slate-200/50'
@@ -101,16 +118,59 @@ export default function FilterPopover({ filters, onFiltersChange }) {
                   </button>
                 ))}
               </div>
+            </div> */}
+                 <div className={sectionClass}>
+              <label className={labelClass}>Region</label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: 'nhfra', icon: '⚡', label: 'Non-HFRA' },
+                  { id: 'buffer', icon: '🌿', label: 'Buffer' },
+                  { id: 'hfra', icon: '❄️', label: 'HFRA' }
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleRegionToggle(item.id)}
+                    className={`px-2 py-1.5 text-[10px] font-bold rounded-lg border transition-all flex items-center gap-2 ${
+                      localFilters.region.includes(item.id)
+                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700'
+                        : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
+                    }`}
+                  >
+                    <span>{item.icon}</span> {item.label}
+                  </button>
+                ))}
+              </div>
             </div>
-
+     <div className={sectionClass}>
+              <label className={labelClass}>mFPC Level</label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: 'Below', icon: '⚡', label: 'Below' },
+                  { id: 'Near', icon: '🌿', label: 'Near' },
+                  { id: 'Meeting', icon: '❄️', label: 'Meeting' }
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleMfpcToggle(item.id)}
+                    className={`px-2 py-1.5 text-[10px] font-bold rounded-lg border transition-all flex items-center gap-2 ${
+                      localFilters.psps_mfpc.includes(item.id)
+                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700'
+                        : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
+                    }`}
+                  >
+                    <span>{item.icon}</span> {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             {/* Guidance Categories - Grid Layout */}
             <div className={sectionClass}>
               <label className={labelClass}>Guidance Categories</label>
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { id: 'CFPt-Asset', icon: '⚡', label: 'Asset' },
-                  { id: 'CFPt-Veg', icon: '🌿', label: 'Veg' },
-                  { id: 'CFB', icon: '❄️', label: 'CFB' }
+                  { id: 'Below', icon: '⚡', label: 'Below' },
+                  { id: 'Near', icon: '🌿', label: 'Near' },
+                  { id: 'Meeting', icon: '❄️', label: 'Meeting' }
                 ].map((item) => (
                   <button
                     key={item.id}

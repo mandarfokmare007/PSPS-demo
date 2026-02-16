@@ -67,7 +67,7 @@ export default function TopBar({
 
         {/* Center: View Mode Segmented Control */}
         <div className="hidden lg:flex flex-col gap-1.5 items-center">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Perspective</span>
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Summary View</span>
           <div className="flex bg-slate-100 p-1 rounded-full border border-slate-200">
             {['All', 'DirectScope', 'Removed'].map((mode) => (
               <button
@@ -79,7 +79,7 @@ export default function TopBar({
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
-                {mode === 'DirectScope' ? 'Direct' : mode === 'Removed' ? 'Removed' : 'All Lines'}
+                {mode === 'DirectScope' ? 'Direct Scope' : mode === 'Removed' ? 'Removed' : 'All Lines'}
               </button>
             ))}
           </div>
@@ -114,17 +114,17 @@ export default function TopBar({
 
             <button
               onClick={onSendToMET}
-              className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-xs font-bold rounded-full hover:bg-blue-700 transition-all shadow-md shadow-blue-100 active:scale-95"
+              className="flex items-center gap-2 px-5 py-2.5 bg-slate-600 text-white text-xs font-bold rounded-full hover:bg-blue-700 transition-all shadow-md shadow-blue-100 active:scale-95"
             >
-              <span>📤</span> Push to MET
+              <span>📤</span>MET Transmission
             </button>
 
             <a
               href="#weather-map"
-              className="w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-600 rounded-full hover:bg-blue-50 hover:text-blue-600 transition-all border border-slate-200"
+              className=" flex items-center px-5 py-2.5 justify-center bg-slate-100 text-slate-600 rounded-full hover:bg-blue-50 hover:text-blue-600 transition-all border border-slate-200"
               title="Weather Map"
             >
-              🌤️
+              🌤️Weather Map
             </a>
           </div>
         </div>

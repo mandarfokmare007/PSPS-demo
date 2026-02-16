@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import MainSummaryTable from './MainSummaryTable';
 import QuickActionsBar from './QuickActionsBar';
-import SecondaryDetailsTable from './SecondaryDetailsTable';
 
 export default function ControlPanel({
   transmissionLines,
@@ -134,18 +133,7 @@ export default function ControlPanel({
         />
       </div>
 
-      {/* Secondary Details Table (if line selected) */}
-      {selectedLine && (
-        <div className="flex-1 overflow-auto border-t border-gray-200 bg-gray-50">
-          <SecondaryDetailsTable
-            line={selectedLine}
-            selectedStructureId={selectedStructureId}
-            onSelectStructure={onSelectStructure}
-            onApplyOverride={onApplyOverride}
-            onClose={() => onSelectLine(null)}
-          />
-        </div>
-      )}
+  
     </div>
   );
 }

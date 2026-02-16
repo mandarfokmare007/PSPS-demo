@@ -24,49 +24,49 @@ export default function QuickActionsBar({ onSendToMET, selectedLineId, transmiss
     <>
       <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200 px-6 py-4 flex items-center gap-3 flex-wrap sticky top-0 z-20">
         {/* Divider */}
-        <div className="h-8 w-px bg-gray-300"></div>
+        {/* <div className="h-8 w-px bg-gray-300"></div> */}
 
         {/* Quick Action Buttons Title */}
-        <span className="text-xs font-bold text-gray-600 uppercase tracking-wide">Quick Actions:</span>
+        {/* <span className="text-xs font-bold text-gray-600 uppercase tracking-wide">Quick Actions:</span> */}
 
         {/* Quick Action Buttons */}
         <button
-          onClick={() => setActiveQuickAction('CFPt-Asset')}
+          // onClick={() => setActiveQuickAction('CFPt-Asset')}
           className="px-3 py-1.5 text-xs font-semibold bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors border border-blue-200 hover:border-blue-300"
           title="Review Cold Front Potential - Asset impacts"
         >
           ⚡ CFPt Asset
         </button>
         <button
-          onClick={() => setActiveQuickAction('CFPt-Veg')}
+          // onClick={() => setActiveQuickAction('CFPt-Veg')}
           className="px-3 py-1.5 text-xs font-semibold bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors border border-orange-200 hover:border-orange-300"
           title="Review Cold Front Potential - Vegetation impacts"
         >
           🌿 CFPt Veg
         </button>
         <button
-          onClick={() => setActiveQuickAction('CFB')}
+          // onClick={() => setActiveQuickAction('CFB')}
           className="px-3 py-1.5 text-xs font-semibold bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition-colors border border-yellow-200 hover:border-yellow-300"
           title="Review Cold Front Boundary zones"
         >
           ❄️ CFB
         </button>
         <button
-          onClick={() => setActiveQuickAction('A-Tags')}
+          // onClick={() => setActiveQuickAction('A-Tags')}
           className="px-3 py-1.5 text-xs font-semibold bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors border border-green-200 hover:border-green-300"
           title="Review open A-Tags (SAP tickets)"
         >
           🏷️ A-Tags
         </button>
         <button
-          onClick={() => setActiveQuickAction('HNI/HNU')}
+          // onClick={() => setActiveQuickAction('HNI/HNU')}
           className="px-3 py-1.5 text-xs font-semibold bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors border border-purple-200 hover:border-purple-300"
           title="Review HNI/HNU maintenance tags"
         >
           🔧 HNI/HNU
         </button>
         <button
-          onClick={() => setActiveQuickAction('D vs DINDR')}
+          // onClick={() => setActiveQuickAction('D vs DINDR')}
           className="px-3 py-1.5 text-xs font-semibold bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors border border-red-200 hover:border-red-300"
           title="Review Direct Impact vs Grounding Recommended"
         >
@@ -78,13 +78,13 @@ export default function QuickActionsBar({ onSendToMET, selectedLineId, transmiss
    
 
         {/* Send to MET Button */}
-        <button
+        {/* <button
           onClick={onSendToMET}
           className="px-4 py-2 text-xs font-bold bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm hover:shadow-md"
           title="Send all overrides to MET system"
         >
           📤 Send to MET Now
-        </button>
+        </button> */}
 
         {/* Export / Reports Menu */}
         <div className="relative">
