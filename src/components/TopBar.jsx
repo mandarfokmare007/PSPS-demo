@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react';
+import logo from '../assets/pge-logo.jpeg';
+
+
+
 
 export default function TopBar({
   currentModel,
@@ -30,9 +34,7 @@ export default function TopBar({
         <div className="flex items-center gap-6 flex-1">
           <div className="flex flex-col gap-0.5 min-w-fit">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-200">
-                <span className="text-white font-black text-xs">PS</span>
-              </div>
+              <img height={40} width={40} src={logo} />
               <h1 className="text-xl font-extrabold text-slate-800 tracking-tight">
                 PSPS <span className="text-blue-600">Summary</span>
               </h1>

@@ -17,6 +17,8 @@ export default function ControlPanel({
   onApplyOverride,
   onSendToMET,
   onApplyFilters,
+  onToggleMap,
+  isMapOpen
 }) {
   const [sortConfig, setSortConfig] = useState({ key: 'tline_name', direction: 'asc' });
   const [visibleColumns, setVisibleColumns] = useState({
@@ -101,24 +103,8 @@ export default function ControlPanel({
   };
 
   return (
-    <div className="w-2/5 bg-white border-l border-gray-300 flex flex-col overflow-hidden">
-      {/* Filter Panel */}
-      {/* {filtersOpen && (
-        <FilterPanel
-          filters={appState.filters}
-          onFiltersChange={onApplyFilters}
-          onToggleFilters={onFiltersToggle}
-        />
-      )} */}
-
-      {!filtersOpen && (
-        <button
-          onClick={onFiltersToggle}
-          className="px-4 py-2 text-sm text-blue-600 hover:bg-gray-50 border-b border-gray-200 font-semibold"
-        >
-          + Show Filters
-        </button>
-      )}
+    <div className="bg-white border-l border-gray-300 flex flex-col overflow-hidden">
+    
 
       {/* Quick Actions Bar */}
       <QuickActionsBar
@@ -126,7 +112,11 @@ export default function ControlPanel({
         selectedLineId={selectedLineId}
         transmissionLines={transmissionLines}
         snapshots={appState.snapshots}
+        onToggleMap={onToggleMap}
+        isMapOpen={isMapOpen}
       />
+  {/* Filter Panel */}
+
 
       {/* Main Summary Table */}
       <div className="flex-1 overflow-auto border-b border-gray-200">
@@ -138,6 +128,9 @@ export default function ControlPanel({
           onSelectLine={onSelectLine}
           onSort={handleSort}
           onColumnToggle={handleColumnToggle}
+          filters={appState.filters}
+    onFiltersChange={onApplyFilters}
+    onToggleFilters={onFiltersToggle}
         />
       </div>
 
@@ -149,6 +142,7 @@ export default function ControlPanel({
             selectedStructureId={selectedStructureId}
             onSelectStructure={onSelectStructure}
             onApplyOverride={onApplyOverride}
+            onClose={() => onSelectLine(null)}
           />
         </div>
       )}

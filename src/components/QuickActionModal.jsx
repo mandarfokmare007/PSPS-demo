@@ -32,25 +32,25 @@ export default function QuickActionModal({ type, lines, onClose }) {
       prev.includes(lineId) ? prev.filter(l => l !== lineId) : [...prev, lineId]
     );
   };
+const getTitleAndDescription = () => {
+  const titles = {
+    'CFPt-Asset': 'Catastrophic Fire Probability - Asset',
+    'CFPt-Veg': 'Catastrophic Fire Probability - Vegetation',
+    'CFB': 'Catastrophic Fire Behavior',
+    'A-Tags': 'Open A-Tags (Transmission Line Correction)',
+    'HNI/HNU': 'Hazard Notification Immediate / Urgent',
+    'D vs DINDR': 'Direct Impact vs Direct Induction',
+  };
 
-  const getTitleAndDescription = () => {
-    const titles = {
-      'CFPt-Asset': 'Cold Front Potential - Asset',
-      'CFPt-Veg': 'Cold Front Potential - Vegetation',
-      'CFB': 'Cold Front Boundary',
-      'A-Tags': 'Open A-Tags (SAP Tickets)',
-      'HNI/HNU': 'HNI Hazard / HNU Maintenance Tags',
-      'D vs DINDR': 'Direct Impact vs Grounding Recommended',
-    };
+  const descriptions = {
+    'CFPt-Asset': 'The product of Fire Potential Index (FPI) and Operability Assessment (OA) value, predicting asset failure leading to ignition.',
+    'CFPt-Veg': 'Risk index for catastrophic fire potential associated with the likelihood of a tree falling on a transmission asset.',
+    'CFB': 'Fire behavior criteria (flame length and rate of spread) from 8-hour forecast simulations using Technosylva technology[cite: 438, 439, 440].',
+    'A-Tags': 'High-priority maintenance tags (Priority = A, Status = PEND) for electric assets that require attention before a weather event[cite: 443, 456, 457, 280].',
+    'HNI/HNU': 'Vegetation management tags identifying immediate (HNI) or urgent (HNU) hazard trees near transmission lines[cite: 443, 289].',
+    'D vs DINDR': 'Classification for de-energization: Direct (D) due to fire risk vs. Direct Induction (DINDR) due to induction risk[cite: 422, 96].',
+  };
 
-    const descriptions = {
-      'CFPt-Asset': 'Lines with Asset-related cold front potential issues',
-      'CFPt-Veg': 'Lines with Vegetation-related cold front potential issues',
-      'CFB': 'Lines in cold front boundary zones',
-      'A-Tags': 'Lines with open emergency or review tickets requiring attention',
-      'HNI/HNU': 'Lines with active Hazard (HNI) or Maintenance (HNU) tags',
-      'D vs DINDR': 'Review lines marked direct impact (D) vs grounding needed (DINDR)',
-    };
 
     return {
       title: titles[type] || type,
@@ -61,9 +61,9 @@ export default function QuickActionModal({ type, lines, onClose }) {
   const { title, description } = getTitleAndDescription();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-2xl w-4/5 h-4/5 flex flex-col border-2 border-gray-200">
-        {/* Modal Header */}
+<div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity flex items-center justify-center z-50 p-6">
+  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[85vh] flex flex-col border border-gray-100 animate-in zoom-in-95 duration-200">
+
         <div className="px-8 py-6 border-b-2 border-gray-200 bg-gradient-to-r from-blue-50 to-white">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
@@ -152,7 +152,7 @@ export default function QuickActionModal({ type, lines, onClose }) {
                     </div>
                     <div>
                       <span className="text-xs font-bold text-gray-600 uppercase">Max OA:</span>
-                      <p className="font-bold text-gray-900">{line.max_oa_pf.toFixed(2)}</p>
+                      <p className="font-bold text-gray-900">{line.max_oa_pf}</p>
                     </div>
                     <div>
                       <span className="text-xs font-bold text-gray-600 uppercase">FPC:</span>

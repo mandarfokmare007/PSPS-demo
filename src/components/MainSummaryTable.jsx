@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import React, { useState } from 'react'; // Add React here
+import FilterPanel from './FilterPanel';
 
 export default function MainSummaryTable({
   lines,
@@ -8,6 +9,9 @@ export default function MainSummaryTable({
   onSelectLine,
   onSort,
   onColumnToggle,
+      filters,
+    onFiltersChange,
+    onToggleFilters
 }) {
   const [showColumnChooser, setShowColumnChooser] = useState(false);
 
@@ -46,11 +50,28 @@ export default function MainSummaryTable({
     if (type === 'D') return 'badge badge-primary';
     return 'badge badge-warning';
   };
+// Inside MainSummaryTable
+const [currentPage, setCurrentPage] = useState(1);
+const [rowsPerPage, setRowsPerPage] = useState(10);
 
+// Calculate Pagination Values
+const totalRows = lines.length;
+
+const totalPages = Math.ceil(lines.length / rowsPerPage);
+
+  let adjustedPage = currentPage;
+  if (currentPage > totalPages && totalPages > 0) {
+    adjustedPage = 1;
+    setCurrentPage(1); // React allows this specific pattern to avoid cascading effects
+  }
+
+  const startIndex = (adjustedPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedLines = lines.slice(startIndex, startIndex + rowsPerPage);
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Table Toolbar */}
-      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between sticky top-0 z-10">
+      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between sticky top-0 z-30">
         <div className="flex items-center gap-4">
           <span className="text-sm font-bold text-gray-700">{lines.length} Transmission Lines</span>
           {lines.length > 0 && (
@@ -70,6 +91,12 @@ export default function MainSummaryTable({
             </div>
           )}
         </div>
+        <div className="flex items-center gap-3">
+  <FilterPanel
+    filters={filters}
+    onFiltersChange={onFiltersChange}
+    onToggleFilters={onToggleFilters}
+  />
         <div className="relative">
           <button
             onClick={() => setShowColumnChooser(!showColumnChooser)}
@@ -98,7 +125,7 @@ export default function MainSummaryTable({
               </div>
             </div>
           )}
-        </div>
+        </div></div>
       </div>
 
       {/* Table */}
@@ -135,14 +162,14 @@ export default function MainSummaryTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {lines.length === 0 ? (
+            {paginatedLines.length === 0 ? (
               <tr>
                 <td colSpan={visibleDefs.length} className="px-6 py-8 text-center text-gray-500 font-medium">
                   📭 No transmission lines match the selected filters.
                 </td>
               </tr>
             ) : (
-              lines.map((line) => (
+              paginatedLines.map((line) => (
                 <tr
                   key={line.id}
                   onClick={() => onSelectLine(line.id)}
@@ -196,6 +223,70 @@ export default function MainSummaryTable({
             )}
           </tbody>
         </table>
+        {/* Pagination Footer */}
+<div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between sticky bottom-0 z-20">
+  <div className="flex items-center gap-4">
+    <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+      Showing {startIndex + 1} to {Math.min(endIndex, totalRows)} of {totalRows}
+    </span>
+    
+    <select 
+      value={rowsPerPage}
+      onChange={(e) => {
+        setRowsPerPage(Number(e.target.value));
+        setCurrentPage(1);
+      }}
+      className="text-xs font-bold border-gray-300 rounded-md bg-white focus:ring-blue-500 py-1"
+    >
+      {[10, 25, 50, 100].map(size => (
+        <option key={size} value={size}>Show {size}</option>
+      ))}
+    </select>
+  </div>
+
+  <div className="flex items-center gap-2">
+    <button
+      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+      disabled={currentPage === 1}
+      className="p-2 rounded-lg border border-gray-300 bg-white text-gray-600 disabled:opacity-40 disabled:bg-gray-100 hover:bg-gray-50 transition-colors"
+    >
+      Previous
+    </button>
+    
+    <div className="flex items-center gap-1">
+      {Array.from({ length: totalPages }, (_, i) => i + 1)
+        .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1)
+        .map((page, index, array) => {
+          // Add ellipses logic
+          const showEllipsis = index > 0 && page - array[index - 1] > 1;
+          
+          return (
+            <React.Fragment key={page}>
+              {showEllipsis && <span className="px-2 text-gray-400">...</span>}
+              <button
+                onClick={() => setCurrentPage(page)}
+                className={`w-9 h-9 rounded-lg text-sm font-bold transition-all ${
+                  currentPage === page
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
+                    : 'bg-white border border-gray-300 text-gray-600 hover:border-blue-400'
+                }`}
+              >
+                {page}
+              </button>
+            </React.Fragment>
+          );
+        })}
+    </div>
+
+    <button
+      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+      disabled={currentPage === totalPages || totalPages === 0}
+      className="p-2 rounded-lg border border-gray-300 bg-white text-gray-600 disabled:opacity-40 disabled:bg-gray-100 hover:bg-gray-50 transition-colors"
+    >
+      Next
+    </button>
+  </div>
+</div>
       </div>
     </div>
   );

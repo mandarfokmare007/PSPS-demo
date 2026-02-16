@@ -24,10 +24,16 @@ export default function MapSection({
     aTags: "a-tags-layer",
   };
 
-  const getStyleUrl = (styleId) => {
-    // Use style.json from maplibre demo server
-    return "https://demotiles.maplibre.org/style.json";
+const getStyleUrl = (styleId) => {
+  const styles = {
+    liberty: "https://tiles.openfreemap.org/styles/liberty",
+    dark: "https://tiles.openfreemap.org/styles/dark",
+    bright: "https://tiles.openfreemap.org/styles/bright",
+    gray: "https://tiles.openfreemap.org/styles/positron", // or gray equivalent
   };
+  // Return the selected style or default to liberty
+  return styles[styleId] || styles.liberty;
+};
 
   // ----------------------------
   // ADD / UPDATE LAYERS
@@ -324,13 +330,24 @@ export default function MapSection({
   // ----------------------------
   // STYLE CHANGE SAFE
   // ----------------------------
-  useEffect(() => {
-    if (!map.current) return;
-    map.current.setStyle(getStyleUrl(basemap));
-    map.current.once("styledata", () => {
-      addLayers();
-    });
-  }, [basemap]);
+useEffect(() => {
+  if (!map.current) return;
+
+  const styleUrl = getStyleUrl(basemap);
+  map.current.setStyle(styleUrl);
+
+  // Use 'idle' or 'style.load' to ensure the map is ready for GeoJSON sources
+  const handleStyleLoad = () => {
+    console.log("🎨 New style loaded, re-adding layers...");
+    addLayers();
+  };
+
+  map.current.once("style.load", handleStyleLoad);
+  
+  return () => {
+    map.current?.off("style.load", handleStyleLoad);
+  };
+}, [basemap, addLayers]);
 
   // ----------------------------
   // UPDATE ON DATA CHANGE
@@ -362,7 +379,7 @@ export default function MapSection({
   }, [appState?.layerVisibility]);
 
   return (
-    <div className="relative w-3/5 h-full bg-slate-200">
+    <div className="relative h-full bg-slate-200">
       <div 
         ref={mapContainer} 
         className="absolute inset-0 w-full h-full bg-blue-100" 

@@ -3,17 +3,21 @@ import ControlPanel from '../components/ControlPanel';
 import Footer from '../components/Footer';
 import MapSection from '../components/MapSection';
 import TopBar from '../components/TopBar';
-import { mockAppState, mockMETModels, mockTransmissionLines, mockTPPolygons, mockATagPoints, mockVMTagPoints } from '../mockData';
+import { mockAppState, mockATagPoints, mockMETModels, mockTPPolygons, mockTransmissionLines, mockVMTagPoints } from '../mockData';
 import { useKeyboardShortcuts } from '../utils/keyboardShortcuts';
 
 export default function MainPage() {
+
   const [appState, setAppState] = useState(mockAppState);
   const [transmissionLines, setTransmissionLines] = useState(mockTransmissionLines);
-  const [selectedLineId, setSelectedLineId] = useState(appState.selectedLineId);
+  const [selectedLineId, setSelectedLineId] = useState(null);
   const [selectedStructureId, setSelectedStructureId] = useState(appState.selectedStructureId);
   const [filtersOpen, setFiltersOpen] = useState(true);
   const [lastMETSendTime, setLastMETSendTime] = useState(new Date());
   const [timeUntilNextMETSend, setTimeUntilNextMETSend] = useState(15);
+
+  // NEW — drawer state (does not affect logic)
+  const [isMapOpen, setIsMapOpen] = useState(true);
 
   const selectedLine = transmissionLines.find((line) => line.id === selectedLineId);
   const selectedStructure = selectedLine?.structures?.find((s) => s.id === selectedStructureId);
@@ -23,7 +27,7 @@ export default function MainPage() {
     const batchInterval = setInterval(() => {
       setTimeUntilNextMETSend((prev) => {
         if (prev <= 1) {
-          // Auto-send to MET
+
           const overridesToSend = transmissionLines.flatMap(line =>
             line.structures.flatMap(s => s.overrides)
           );
@@ -41,7 +45,7 @@ export default function MainPage() {
         }
         return prev - 1;
       });
-    }, 60000); // Update every minute
+    }, 60000);
 
     return () => clearInterval(batchInterval);
   }, [transmissionLines]);
@@ -60,11 +64,11 @@ export default function MainPage() {
   }, []);
 
   const generateArtifacts = useCallback(() => {
+
     const now = new Date();
     const timestamp = now.toISOString();
     const modelInfo = mockMETModels.find(m => m.id === appState.currentMETModel);
 
-    // Generate comprehensive report
     const comprehensiveReport = {
       title: `PSPS Summary Report - ${modelInfo.version} Run`,
       generatedAt: timestamp,
@@ -87,8 +91,8 @@ export default function MainPage() {
       })),
     };
 
-    // Generate Direct Impact list (ETEC format)
     const directImpactLines = transmissionLines.filter(l => l.flags.hasDirectImpact);
+
     const directImpactList = {
       title: 'Direct Impact Lines (ETEC Format)',
       generatedAt: timestamp,
@@ -110,7 +114,6 @@ export default function MainPage() {
       count: directImpactLines.length,
     };
 
-    // Generate audit/adjustment history
     const adjustmentHistory = {
       title: 'Adjustments & Overrides History',
       generatedAt: timestamp,
@@ -136,11 +139,13 @@ export default function MainPage() {
         adjustmentHistory,
       },
     };
-  }, [transmissionLines, appState.currentMETModel, mockMETModels]);
+
+  }, [transmissionLines, appState.currentMETModel]);
 
   const handleSave = useCallback(() => {
+
     const artifacts = generateArtifacts();
-    // Store snapshot in app state
+
     const newSnapshot = {
       id: `snap-${Date.now()}`,
       timestamp: artifacts.timestamp,
@@ -158,14 +163,10 @@ export default function MainPage() {
       lastSaveTime: new Date(artifacts.timestamp),
     }));
 
-    console.log('✓ Artifacts generated and saved:', {
-      fileName: artifacts.fileName,
-      timestamp: artifacts.timestamp,
-      snapshots: appState.snapshots.length + 1,
-    });
-  }, [transmissionLines, appState.currentMETModel, generateArtifacts,   appState.snapshots.length]);
+  }, [transmissionLines, appState.currentMETModel, generateArtifacts]);
 
   const handleSendToMET = useCallback(() => {
+
     const overridesToSend = transmissionLines.flatMap(line =>
       line.structures.flatMap(s => s.overrides)
     );
@@ -173,14 +174,11 @@ export default function MainPage() {
     console.log('✓ Manual send to MET triggered:', {
       timestamp: new Date().toISOString(),
       overridesToSend: overridesToSend.length,
-      linesModified: transmissionLines.filter(l =>
-        l.structures.some(s => s.overrides.length > 0)
-      ).length,
     });
 
-    // Reset the timer
     setLastMETSendTime(new Date());
     setTimeUntilNextMETSend(15);
+
   }, [transmissionLines]);
 
   const handleSelectLine = useCallback((lineId) => {
@@ -231,7 +229,6 @@ export default function MainPage() {
     }));
   }, []);
 
-  // Keyboard shortcuts
   useKeyboardShortcuts({
     onSave: handleSave,
     onSendToMET: handleSendToMET,
@@ -240,6 +237,7 @@ export default function MainPage() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
+
       <TopBar
         currentModel={appState.currentMETModel}
         availableModels={mockMETModels}
@@ -252,42 +250,65 @@ export default function MainPage() {
         onModelChange={handleModelChange}
         onSave={handleSave}
         onSendToMET={handleSendToMET}
+       
       />
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left: Interactive Map (60%) */}
-        <MapSection
-          lines={transmissionLines}
-          selectedLineId={selectedLineId}
-          appState={appState}
-          onSelectLine={handleSelectLine}
-          onLayerToggle={handleLayerToggle}
-          tpPolygons={mockTPPolygons}
-          aTagPoints={mockATagPoints}
-          vmTagPoints={mockVMTagPoints}
-        />
+<div className="relative flex flex-1 overflow-hidden">
 
-        
+  {/* CONTROL PANEL (MAIN CONTENT) */}
+  <div
+    className={`
+      h-full transition-all duration-300
+      ${isMapOpen ? "pr-[40%]" : "pr-0"}
+      w-full
+    `}
+  >
+    <ControlPanel
+      transmissionLines={transmissionLines}
+      selectedLineId={selectedLineId}
+      selectedStructureId={selectedStructureId}
+      selectedLine={selectedLine}
+      selectedStructure={selectedStructure}
+      appState={appState}
+      filtersOpen={filtersOpen}
+      onFiltersToggle={() => setFiltersOpen(!filtersOpen)}
+      onSelectLine={handleSelectLine}
+      onSelectStructure={handleSelectStructure}
+      onApplyOverride={handleApplyOverride}
+      onSendToMET={handleSendToMET}
+      onApplyFilters={handleFiletered}
+       onToggleMap={() => setIsMapOpen(prev => !prev)}
+       isMapOpen = {isMapOpen}
+    />
+  </div>
 
-        {/* Right: Controls + Tables (40%) */}
-        <ControlPanel
-          transmissionLines={transmissionLines}
-          selectedLineId={selectedLineId}
-          selectedStructureId={selectedStructureId}
-          selectedLine={selectedLine}
-          selectedStructure={selectedStructure}
-          appState={appState}
-          filtersOpen={filtersOpen}
-          onFiltersToggle={() => setFiltersOpen(!filtersOpen)}
-          onSelectLine={handleSelectLine}
-          onSelectStructure={handleSelectStructure}
-          onApplyOverride={handleApplyOverride}
-          onSendToMET={handleSendToMET}
-          onApplyFilters={handleFiletered}
-        />
-      </div>
+  {/* MAP DRAWER */}
+  <div
+    className={`
+      absolute top-0 right-0 h-full
+      w-[40%]
+      transition-transform duration-300
+      ${isMapOpen ? "translate-x-0" : "translate-x-full"}
+    `}
+  >
+    <MapSection
+      lines={transmissionLines}
+      selectedLineId={selectedLineId}
+      appState={appState}
+      onSelectLine={handleSelectLine}
+      onLayerToggle={handleLayerToggle}
+      tpPolygons={mockTPPolygons}
+      aTagPoints={mockATagPoints}
+      vmTagPoints={mockVMTagPoints}
+    />
+  </div>
+
+</div>
+
+
 
       <Footer userInfo={appState.userInfo} metadata={{ lastMETRunTime: appState.currentMETTimestamp }} />
+
     </div>
   );
 }

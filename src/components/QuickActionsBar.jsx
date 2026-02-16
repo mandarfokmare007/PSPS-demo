@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { downloadArtifacts, downloadFile, generateCSV, generateETECDirectImpact } from '../utils/exportUtils';
 import QuickActionModal from './QuickActionModal';
 
-export default function QuickActionsBar({ onSendToMET, selectedLineId, transmissionLines, snapshots }) {
+export default function QuickActionsBar({ onSendToMET, selectedLineId, transmissionLines, snapshots,isMapOpen, onToggleMap }) {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [activeQuickAction, setActiveQuickAction] = useState(null);
 
@@ -72,8 +72,10 @@ export default function QuickActionsBar({ onSendToMET, selectedLineId, transmiss
         >
           ⚠️ D vs DINDR
         </button>
+             <div className="flex-grow"></div>
+<div className="flex items-center gap-3 pr-16">
 
-        <div className="flex-grow"></div>
+   
 
         {/* Send to MET Button */}
         <button
@@ -88,13 +90,13 @@ export default function QuickActionsBar({ onSendToMET, selectedLineId, transmiss
         <div className="relative">
           <button
             onClick={() => setShowExportMenu(!showExportMenu)}
-            className="px-3 py-2 text-xs font-semibold bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors border border-gray-300 hover:border-gray-400"
+            className="px-3 py-2 me-5 text-xs font-semibold bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors border border-gray-300 hover:border-gray-400"
             title="Export data and reports"
           >
             📊 Export
           </button>
           {showExportMenu && (
-            <div className="absolute right-0 top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-30 min-w-56">
+            <div className="absolute right-0 top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-100 min-w-56">
               <div className="p-3 border-b border-gray-200 bg-gray-50">
                 <p className="text-xs font-bold text-gray-600 uppercase">Export Options</p>
               </div>
@@ -130,6 +132,28 @@ export default function QuickActionsBar({ onSendToMET, selectedLineId, transmiss
             </div>
           )}
         </div>
+        {/* MAP PULL HANDLE */}
+<div
+  onClick={()=>onToggleMap()}
+  className="absolute top-1/2 -translate-y-1/2 right-0 z-50 cursor-pointer transition-all duration-300"
+>
+  <div className="
+      flex items-center justify-center
+       h-10
+      bg-blue-50 border border-blue-200
+      shadow-lg
+      rounded-l-xl
+       hover:bg-blue-100
+      transition-all duration-200
+  ">
+<span className="flex items-center gap-1 text-blue-600 text-sm px-2 font-semibold whitespace-nowrap">
+  {isMapOpen ? "🧭 Map ›" : "‹ 🧭 Map"}
+</span>
+
+  </div>
+</div>
+</div>
+
       </div>
 
       {/* Quick Action Modal */}
